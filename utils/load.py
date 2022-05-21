@@ -31,11 +31,11 @@ def read_file_as_df(filename):
     return df
 
 
-def add_diss_to_s3(filename, diss):
+def add_diss_to_s3(filename, row):
     # get file from connection object
     fs = s3fs.S3FileSystem(anon=False)
     with fs.open(filename, 'a', newline='') as f:
-        return f.writelines('\n' + str(diss[1:-1]))
+        return f.writelines('\n' + str(row)[1:-1])
 
 
 def add_row(filename):
