@@ -70,9 +70,10 @@ def add_diss(lager: dict, disser: str) -> Tuple[str, int]:
         # add diss to list
         if st.button('Diss eintragen!'):
             with st.spinner('Trage den Diss ein...'):
-                time.sleep(1)
-                add_diss_to_s3('ladissapp/ladiss_app.csv',
-                               [disser, dissed, 'date', disses])
+                time.sleep(.1)
+                date = '2022-05-21'
+                row = disser, dissed, date, disses
+                add_diss_to_s3('ladissapp/ladiss_app.csv', row)
                 st.balloons()
                 st.success(
                     f'**{disser}** hat **{dissed}** {disses} Mal gedisst!')
