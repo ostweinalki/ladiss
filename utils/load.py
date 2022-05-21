@@ -1,6 +1,5 @@
 from lib2to3.pgen2.pgen import DFAState
 from PIL import Image
-from sklearn.tree import DecisionTreeClassifier
 from toml import load
 from pathlib import Path
 import s3fs
@@ -26,6 +25,7 @@ def read_file(filename):
 
     with fs.open(filename) as f:
         return f.read()  # .decode('utf-8')
+
 
 def read_file_as_df(filename):
     # get file from connection object
