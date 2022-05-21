@@ -1,8 +1,7 @@
 import time
 import streamlit as st
 import pandas as pd
-from utils.load import get_lager, read_file, read_file_as_df, add_diss_to_s3
-from utils.diss import Disser
+from utils.load import get_lager, read_file_as_df, add_diss_to_s3
 from typing import Tuple
 
 
@@ -13,10 +12,10 @@ def run() -> None:
     lager = get_lager('lager.toml')
 
     # sidebar
-    show_sidebar(lager)
+    view = show_sidebar(lager)
 
     # main page
-    show_page(lager)
+    show_page(lager, view)
 
 
 def show_sidebar(lager: dict) -> None:
@@ -36,20 +35,34 @@ def show_sidebar(lager: dict) -> None:
         del_diss(lager)
 
     # settings
-    change_view()
+    return change_view()
 
 
-def show_page(lager: dict) -> None:
+def show_page(lager: dict, view: str) -> None:
     '''Function to display the main page'''
     st.subheader('Ladiss-App')
 
     # add übersicht
     st.write('Übersicht der Ladiss-Liste')
 
-    df = read_file('ladissapp/ladiss_app.csv')
     df = read_file_as_df('ladissapp/ladiss_app.csv')
 
-    st.write(df)
+    if view == 'Liste':
+        df_list = df.groupby(['wer'])['wieviel'].count().rename(
+            'Anzahl der Striche').sort_values(axis=0, ascending=False)
+        st.write(df_list)
+
+    if view == 'Balken':
+        df = df.groupby(['wer'])['wieviel'].count().rename(
+            'Anzahl der Striche').sort_values(axis=0, ascending=False)
+        st.bar_chart(df)
+
+    if view == 'Torte':
+        st.write(df)
+
+    if view == 'Matrix':
+        df_matrix = pd.crosstab(df.wer, df.wen)
+        st.write(df_matrix)
 
 
 def get_disser(lager: dict) -> str:
@@ -87,7 +100,8 @@ def del_diss(lager):
             st.snow()
 
 
-def change_view():
+def change_view() -> str:
     with st.sidebar.expander('Ansicht ändern'):
-        st.selectbox(label='Was soll angezeigt werden?:',
-                     options=['Liste', 'Balken', 'Torte', 'Matrix'])
+        view = st.selectbox(label='Was soll angezeigt werden?:',
+                            options=['Liste', 'Balken', 'Torte', 'Matrix'])
+    return view
