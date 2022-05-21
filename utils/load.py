@@ -22,19 +22,20 @@ def read_file(filename):
     # get file from connection object
     fs = s3fs.S3FileSystem(anon=False)
     with fs.open(filename) as f:
-        return f.read().decode('utf-8')   
+        return f.read().decode('utf-8')
+
 
 def read_file_as_df(filename):
     # get file using pandas s3 import
     df = pd.read_csv(f's3://{filename}')
     return df
 
-def add_diss_to_s3(filename, diss): 
+
+def add_diss_to_s3(filename, diss):
     # get file from connection object
     fs = s3fs.S3FileSystem(anon=False)
-    with fs.open(filename, 'a') as f:
-        return f.write(diss)   
-
+    with fs.open(filename, 'w', newline='') as f:
+        return f.writelines(diss)
 
 
 def add_row(filename):
