@@ -13,3 +13,8 @@ def get_image(file):
 
 def get_lager(file):
     return dict(load(Path(get_root()) / f'{file}'))
+
+
+def read_file(filesystem, filename):
+    with open(filesystem.open(filename)) as f:
+        return f.read().decode('utf-8')

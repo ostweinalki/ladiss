@@ -1,6 +1,7 @@
 import time
+import s3fs
 import streamlit as st
-from utils.load import get_lager
+from utils.load import get_lager, read_file
 from utils.diss import Disser
 from typing import Tuple
 
@@ -29,7 +30,7 @@ def show_sidebar(lager: dict) -> None:
     if disser != lager['update']['leiterrunde'][0]:
 
         # add a new diss
-        dissed, disses = add_diss(lager, disser)
+        add_diss(lager, disser)
 
         # delete a old diss
         del_diss(lager)
@@ -44,6 +45,11 @@ def show_page(lager: dict) -> None:
 
     # add übersicht
     st.write('Übersicht der Ladiss-Liste')
+
+    # get file from connection object
+    fs = s3fs.S3FileSystem(anon=False)
+    df = read_file(fs, 'ladissapp/ladis_app.csv')
+    st.write(df)
 
 
 def get_disser(lager: dict) -> str:
@@ -64,11 +70,11 @@ def add_diss(lager: dict, disser: str) -> Tuple[str, int]:
         # add diss to list
         if st.button('Diss eintragen!'):
             with st.spinner('Trage den Diss ein...'):
-                time.sleep(2)
+                time.sleep(1)
+
                 st.balloons()
                 st.success(
                     f'**{disser}** hat **{dissed}** {disses} Mal gedisst!')
-    return dissed, disses
 
 
 def del_diss(lager):
