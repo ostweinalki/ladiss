@@ -1,7 +1,7 @@
 import time
 import streamlit as st
 import pandas as pd
-from utils.load import get_lager, read_file, read_file_as_df
+from utils.load import get_lager, read_file, read_file_as_df, add_diss_to_s3
 from utils.diss import Disser
 from typing import Tuple
 
@@ -71,7 +71,8 @@ def add_diss(lager: dict, disser: str) -> Tuple[str, int]:
         if st.button('Diss eintragen!'):
             with st.spinner('Trage den Diss ein...'):
                 time.sleep(1)
-
+                add_diss_to_s3('ladissapp/ladiss_app.csv',
+                               [disser, dissed, 'date', disses])
                 st.balloons()
                 st.success(
                     f'**{disser}** hat **{dissed}** {disses} Mal gedisst!')
