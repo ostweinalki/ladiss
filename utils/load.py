@@ -1,6 +1,10 @@
+from lib2to3.pgen2.pgen import DFAState
 from PIL import Image
+from sklearn.tree import DecisionTreeClassifier
 from toml import load
 from pathlib import Path
+import s3fs
+import pandas as pd
 
 
 def get_root() -> str:
@@ -15,6 +19,19 @@ def get_lager(file):
     return dict(load(Path(get_root()) / f'{file}'))
 
 
-def read_file(filesystem, filename):
-    with open(filesystem.open(filename)) as f:
-        return f.read().decode('utf-8')
+def read_file(filename):
+
+    # get file from connection object
+    fs = s3fs.S3FileSystem(anon=False)
+
+    with fs.open(filename) as f:
+        return f.read()  # .decode('utf-8')
+
+def read_file_as_df(filename):
+    # get file from connection object
+    df = pd.read_csv(f's3://{filename}')
+    return df
+
+
+def add_row(filename):
+    pass

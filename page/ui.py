@@ -1,7 +1,7 @@
 import time
-import s3fs
 import streamlit as st
-from utils.load import get_lager, read_file
+import pandas as pd
+from utils.load import get_lager, read_file, read_file_as_df
 from utils.diss import Disser
 from typing import Tuple
 
@@ -46,9 +46,9 @@ def show_page(lager: dict) -> None:
     # add übersicht
     st.write('Übersicht der Ladiss-Liste')
 
-    # get file from connection object
-    fs = s3fs.S3FileSystem(anon=False)
-    df = read_file(fs, 'ladissapp/ladis_app.csv')
+    df = read_file('ladissapp/ladiss_app.csv')
+    df = read_file_as_df('ladissapp/ladiss_app.csv')
+
     st.write(df)
 
 
