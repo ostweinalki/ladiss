@@ -35,7 +35,8 @@ def add_diss_to_s3(filename, row):
     # get file from connection object
     fs = s3fs.S3FileSystem(anon=False)
     with fs.open(filename, 'a', newline='') as f:
-        return f.writelines('\n' + str(row)[1:-1])
+        row = str(row)[1:-1].replace("'", '')
+        return f.writelines('\n' + row)
 
 
 def add_row(filename):
