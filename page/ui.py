@@ -45,15 +45,16 @@ def show_page(lager: dict, view: str) -> None:
     # add übersicht
     st.write('Übersicht der Ladiss-Liste')
 
-    df = read_file_as_df('ladissapp/ladiss_app.csv')
+    df = pd.read_csv('ladiss_app.csv', header=0)
+    #df = read_file_as_df('ladissapp/ladiss_app.csv')
 
     if view == 'Liste':
-        df_list = df.groupby(['wer'])['wieviel'].count().rename(
+        df_list = df.groupby('wen')['wieviel'].sum().rename(
             'Anzahl der Striche').sort_values(axis=0, ascending=False)
         st.write(df_list)
 
     if view == 'Balken':
-        df = df.groupby(['wer'])['wieviel'].count().rename(
+        df = df.groupby('wen')['wieviel'].sum().rename(
             'Anzahl der Striche').sort_values(axis=0, ascending=False)
         st.bar_chart(df)
 
