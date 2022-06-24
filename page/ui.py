@@ -45,8 +45,8 @@ def show_page(lager: dict, view: str) -> None:
     # add übersicht
     st.write('Übersicht der Ladiss-Liste')
 
-    df = pd.read_csv('ladiss_app.csv', header=0)
-    #df = read_file_as_df('ladissapp/ladiss_app.csv')
+    # df = pd.read_csv('ladiss_app.csv', header=0)
+    df = read_file_as_df('ladissapp/ladiss_app.csv')
 
     if view == 'Liste':
         df_list = df.groupby('wen')['wieviel'].sum().rename(
